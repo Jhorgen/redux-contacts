@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import { connect } from 'react-redux';
+import * as contactAction from './actions/contactAction'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends Component() {
 
-export default App;
+  constructor(props){
+    super(props);
+    this.state = {
+      name: ''
+    }
+  }
+
+  handleChange = (e) => {
+    this.setState({
+      name: e.target.value
+    })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    let contact = {
+      name: this.state.name
+    }
+    this.props.createContact(contact);
+  }
+
+  render() {
+    let name;
+    return (
+      <div>
+        <h1>Clientside Contacts Application</h1>
+        <hr />
+        {/* <ul>
+          {this.props.contacts.map((contact, i) => <li key={i}>{contact.name}</li>)}
+          </ul>*/}
+          <div>
+            <h3>Add Contact Form</h3>
+            <form onSubmit={this.handleSubmit}>
+              <input type='text' onChange={this.handleChange}>
+                <input type='submit' />
+              </form>
+            </div>
+          </div>
+        )
+      }
+    }
+
+    const mapStateToProps = (state, ownProps) => {
+      return {
+        contacts: state.contacts
+      }
+    };
+    
+    const mapStateToProps = (dispatch) => {
+      return {
+        createContact: contact => dispatch(contactAction.createContact(contact))
+      }
+    };
+
+    export default App;
